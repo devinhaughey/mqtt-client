@@ -1,0 +1,27 @@
+##
+# Dockerfile to create a image of the mqtt-subscriber jar with the provided resources
+# inside. Along with exposing the required ports and default values for CLA.
+##
+
+FROM java:8-jre
+
+MAINTAINER dhaugh
+
+WORKDIR mqtt-subscriber/
+
+# Copy the jar and relevant files for SSL connection to broker
+COPY target/mqtt-subscriber.jar mqtt-subscriber.jar
+COPY src/main/resources/client.ks src/main/resources/client.ks
+COPY src/main/resources/client.ts src/main/resources/client.ts
+
+# Change permission of files so there are no conflicts
+RUN chmod 600 src/main/resources/client.ks
+RUN chmod 600 src/main/resources/client.ts
+
+# Expose needed ports for MQTT communication to broker
+EXPOSE 1883 8883
+
+ENTRYPOINT ["java", "-jar", "mqtt-subscriber.jar"]
+
+CMD ["--host=localhost","--port=8883","--user=admin","--password=admin","--client=clientTest"]
+CMD ["--time=7","--qos=1","--topic=testTopic","--messages=250]
