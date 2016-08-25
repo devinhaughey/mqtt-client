@@ -40,3 +40,8 @@ Thumbs.db
 ########################
 *.iml
 *.idea
+.classpath
+.project
+.settings/*
+*/target/**
+.lst
