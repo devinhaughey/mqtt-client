@@ -60,7 +60,7 @@ public class MqttProducer {
     private String topic;
 
     @Value("${numMessages:100}")
-    private int numMessages;
+    private int numMessages =100;
 
     /**
      * The application takes in command line arguments or values provided
@@ -83,8 +83,14 @@ public class MqttProducer {
                         .run(args);
         MyGateway gateway = context.getBean(MyGateway.class);
 
-        // TODO: Refactor code to fix usage of static variables by SpringBoot so values can be passed
-        int numMessages = 100;
+        MqttProducer producer = new MqttProducer();
+
+        producer.messageSending(gateway);
+
+        System.exit(0);
+    }
+
+    private void messageSending(MyGateway gateway) throws IOException {
 
         MqttProducer messageData = new MqttProducer();
 
@@ -101,8 +107,6 @@ public class MqttProducer {
                 System.out.println(String.format("Sent %d numMessages.", i));
             }
         }
-
-        System.exit(0);
     }
 
     /**
@@ -138,7 +142,7 @@ public class MqttProducer {
      * @return factory with the provided credentials to connect to the broker
      */
     @Bean
-    private MqttPahoClientFactory mqttClientFactory() {
+    public MqttPahoClientFactory mqttClientFactory() {
         String tmpDir = System.getProperty("java.io.tmpdir");
         DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
 
