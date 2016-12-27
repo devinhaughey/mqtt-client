@@ -60,7 +60,7 @@ public class MqttProducer {
     private String topic;
 
     @Value("${numMessages:100}")
-    private int numMessages =100;
+    private int numMessages = 100;
 
     /**
      * The application takes in command line arguments or values provided
@@ -90,6 +90,14 @@ public class MqttProducer {
         System.exit(0);
     }
 
+    /**
+     * Method messageSending() takes the MyGateway as a parameter and then
+     * reads the data from a given file to send 100 times as the default amount
+     * unless the user specifies through CLA or a property file.
+     *
+     * @param gateway       Passes the MyGateway class instance
+     * @throws IOException  If data isn't able to be read in, throws IOException
+     */
     private void messageSending(MyGateway gateway) throws IOException {
 
         MqttProducer messageData = new MqttProducer();
@@ -157,13 +165,13 @@ public class MqttProducer {
         sslClientProps.setProperty("com.ibm.ssl.trustStorePassword","password");
         */
 
-        // TODO: Provide better logic in case user uses something besides the default MQTT ports
-        if (port == 1883){
-            factory.setServerURIs("tcp://" + host + ":" + port);
-            System.out.println("tcp://" + host + ":" + port);
-        } else{
+        // TODO: Provide better logic in case user uses something besides the default MQTT port for SSL
+        if (port == 8883){
             factory.setServerURIs("ssl://" + host + ":" + port);
             System.out.println("ssl://" + host + ":" + port);
+        } else{
+            factory.setServerURIs("tcp://" + host + ":" + port);
+            System.out.println("tcp://" + host + ":" + port);
         }
 
         factory.setUserName(user);
